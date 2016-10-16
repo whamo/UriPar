@@ -15,16 +15,30 @@ void UriPar::parseInputUri(char *in_uri)
 	}
 	//try to parse the scheme
 	char *current = in_uri;
-	parseScheme(current, current + strlen(current) - 1);
+	size_t totalSize = strlen(current);
+	if (isalpha(*current)) parseScheme(current, current + totalSize - 1);
+	else if (*current == '/')/*parse the authority section here*/;
+	else if (*current == ':')/*empty and parse authority section here*/;
+	else /*parse the query and fragment part here*/;
 }
 
 void UriPar::parseScheme(char *in_current, char *in_last)
 {
 	char *current = in_current;
-	while (current <= in_last)
+	scheme.startPosition = in_current;
+	while ((current <= in_last)&&(*current != ':')&&isValidSchemeCharacter(*current)) current++;
+	//either hit the end, found an invalid character or found the end of the scheme
+	if (*current == ':')
 	{
-		current++;
+		scheme.endPosition = current;
+		//then parse the authority part;
 	}
+	else /*attempt to parse the query and fragment here*/;
+}
+
+bool UriPar::isValidSchemeCharacter(char in_test)
+{
+	return isalnum(in_test) || (in_test == '+') || (in_test == '-') || (in_test == '.');
 }
 
 void UriPar::resetUriSegments()

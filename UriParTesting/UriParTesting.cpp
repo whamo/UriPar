@@ -8,10 +8,35 @@
 
 TEST_CASE("Test scheme parsing", "[scheme]") {
 	
-	SECTION("Basic test fo scheme") {
+	SECTION("Basic test for scheme") {
 		char *basicURI = "http://www.arsenal.com";
 		UriPar basicTest(basicURI);
-		REQUIRE(basicTest.scheme.startPosition == basicURI + 4);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
+	}
+	SECTION("Basic test for no scheme") {
+		char *basicURI = "//www.arsenal.com";
+		UriPar basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == NULL);
+		REQUIRE(basicTest.scheme.endPosition == NULL);
+	}
+	SECTION("Empty string input - shouldn't blow up") {
+		char *basicURI = "";
+		UriPar basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == NULL);
+		REQUIRE(basicTest.scheme.endPosition == NULL);
+	}
+	SECTION("just query and fragment - shouldn't blow up") {
+		char *basicURI = "?testing=true#somefragment";
+		UriPar basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == NULL);
+		REQUIRE(basicTest.scheme.endPosition == NULL);
+	}
+	SECTION("Teting scheme with special characters") {
+		char *basicURI = "h+2t.0t-9p://www.arsenal.com";
+		UriPar basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 10);
 	}
 }
 
