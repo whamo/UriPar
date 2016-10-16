@@ -1,16 +1,16 @@
-#include "UriPar.h"
+#include "UriParser.h"
 
-UriPar::UriPar(char *in_uri)
+UriParser::UriParser(char *in_uri)
 {
 	resetUriSegments();
 	//parse the string
 	parseInputUri(in_uri);
 }
-void UriPar::parseInputUri(char *in_uri)
+void UriParser::parseInputUri(char *in_uri)
 {
 	if (in_uri == NULL)
 	{
-		//input a null string - throw an exception
+		//input is a null string - throw an exception
 		throw("Null input string exception");
 	}
 	//try to parse the scheme
@@ -25,11 +25,11 @@ void UriPar::parseInputUri(char *in_uri)
 	}
 	else if (*current == ':') parseAuthority(current, current + totalSize - 1);
 	else if (*current == '?')/* parse as query - empty scheme authority and path */;
-	else if (*current == '#')/* parse as query - empty scheme authority path and query */;
+	else if (*current == '#')/* parse as fragment - empty scheme authority path and query */;
 	else /*not possible to parse this string*/;
 }
 
-void UriPar::parseScheme(char *in_current, char *in_last)
+void UriParser::parseScheme(char *in_current, char *in_last)
 {
 	char *current = in_current;
 	scheme.startPosition = in_current;
@@ -45,11 +45,11 @@ void UriPar::parseScheme(char *in_current, char *in_last)
 	{
 		//no scheme found reset the start
 		scheme.startPosition = NULL;
-		parsePath(in_current, in_last); /*attempt to parse the path query and fragment here*/
+		parsePath(in_current, in_last); /*attempt to parse the path (note - cannot be authority) query and fragment here*/
 	}
 }
 
-void UriPar::parseAuthority(char *in_current, char *in_last)
+void UriParser::parseAuthority(char *in_current, char *in_last)
 {
 	char *current = in_current;
 	char *next = ++current;
@@ -63,12 +63,12 @@ void UriPar::parseAuthority(char *in_current, char *in_last)
 		authority.endPosition = current;
 		if (*current == '/') parsePath(current, in_last); /*parse the path here*/
 		else if (*current == '?') /*parse the query here*/;
-		else if (*current == '#') /*parse the query here*/;
+		else if (*current == '#') /*parse the fragment here*/;
 		//sub parse the authority section here into user port blah blah blah
 	}
 	else parsePath(in_current, in_last); /*parsePath(in_current here*/
 }
-void UriPar::parsePath(char *in_current, char *in_last)
+void UriParser::parsePath(char *in_current, char *in_last)
 {
 	char *current = in_current;
 	path.startPosition = current;
@@ -81,14 +81,14 @@ void UriPar::parsePath(char *in_current, char *in_last)
 	}
 	path.endPosition = current;
 	if (*current == '?') /*parse the query here*/;
-	else if (*current == '#') /*parse the query here*/;
+	else if (*current == '#') /*parse the fragment here*/;
 }
-bool UriPar::isValidSchemeCharacter(char in_test)
+bool UriParser::isValidSchemeCharacter(char in_test)
 {
 	return isalnum(in_test) || (in_test == '+') || (in_test == '-') || (in_test == '.');
 }
 
-void UriPar::resetUriSegments()
+void UriParser::resetUriSegments()
 {
 	scheme.startPosition = NULL;
 	scheme.endPosition = NULL;

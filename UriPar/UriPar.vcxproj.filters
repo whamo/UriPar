@@ -21,12 +21,12 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UriPar.h">
+    <ClInclude Include="UriParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="UriPar.cpp">
+    <ClCompile Include="UriParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

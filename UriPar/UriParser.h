@@ -1,6 +1,6 @@
 #pragma once
-#ifndef URIPAR_H
-#define URIPAR_H
+#ifndef URIPARSER_H
+#define URIPARSER_H
 
 #include <string>
 using namespace std;
@@ -11,12 +11,12 @@ typedef struct UriSegment
 	char *endPosition;
 } UriSegment;
 
-class UriPar
+class UriParser
 {
 public:
 	//constructor - string or pointer
-	UriPar(string in_uri);
-	UriPar(char *in_uri);
+	UriParser(string in_uri);
+	UriParser(char *in_uri);
 	//get functions
 	//get functions will pull out strings of the different segments
 	string getScheme() const;
