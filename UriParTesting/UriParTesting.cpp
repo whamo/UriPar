@@ -39,7 +39,39 @@ TEST_CASE("Test scheme parsing", "[scheme]") {
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 10);
 	}
 }
+TEST_CASE("Test authority parsing", "[authority]") {
 
+	SECTION("Basic test for authority") {
+		char *basicURI = "http://www.arsenal.com";
+		UriPar basicTest(basicURI);
+		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 21);
+	}
+	SECTION("Basic test for no authority") {
+		char *basicURI = "http:";
+		UriPar basicTest(basicURI);
+		REQUIRE(basicTest.authority.startPosition == NULL);
+		REQUIRE(basicTest.authority.endPosition == NULL);
+	}
+	SECTION("Basic test for no authority") {
+		char *basicURI = "http:/path/here";
+		UriPar basicTest(basicURI);
+		REQUIRE(basicTest.authority.startPosition == NULL);
+		REQUIRE(basicTest.authority.endPosition == NULL);
+	}
+	SECTION("Basic test for authority followed by query") {
+		char *basicURI = "http://www.arsenal.com?test=true";
+		UriPar basicTest(basicURI);
+		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 21);
+	}
+	SECTION("Basic test for authority followed by fragment") {
+		char *basicURI = "http://www.arsenal.com#somefragment";
+		UriPar basicTest(basicURI);
+		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 21);
+	}
+}
 int main(int argc, char* const argv[])
 {
 	UriPar initTest("some string");
