@@ -2,8 +2,7 @@
 
 UriPar::UriPar(char *in_uri)
 {
-	//simple constructor here
-	int len = strlen(in_uri);
+	resetUriSegments();
 	//parse the string
 	parseInputUri(in_uri);
 }
@@ -26,6 +25,22 @@ void UriPar::parseScheme(char *in_current, char *in_last)
 	{
 		current++;
 	}
+}
 
-	
+void UriPar::resetUriSegments()
+{
+	scheme.startPosition = NULL;
+	scheme.endPosition = NULL;
+	authority.startPosition = NULL;
+	authority.endPosition = NULL;
+	host.startPosition = NULL;
+	host.endPosition = NULL;
+	port.startPosition = NULL;
+	port.endPosition = NULL;
+	path.startPosition = NULL;
+	path.endPosition = NULL;
+	query.startPosition = NULL;
+	query.endPosition = NULL;
+	fragment.startPosition = NULL;
+	fragment.endPosition = NULL;
 }
