@@ -20,11 +20,13 @@ void UriPar::parseInputUri(char *in_uri)
 	else if (*current == '/')
 	{
 		char *next = ++current;
-		if (*next == '/') parseAuthority(current, current + totalSize - 1);
-		else /*parse the path section here*/;
+		if (*next == '/') parseAuthority(--current, current + totalSize - 1);
+		else parsePath(--current, current + totalSize - 1);
 	}
-	else if (*current == ':')/*empty and parse authority section here*/;
-	else /*parse the path as relative and then query and fragment part here*/;
+	else if (*current == ':') parseAuthority(current, current + totalSize - 1);
+	else if (*current == '?')/* parse as query - empty scheme authority and path */;
+	else if (*current == '#')/* parse as query - empty scheme authority path and query */;
+	else /*not possible to parse this string*/;
 }
 
 void UriPar::parseScheme(char *in_current, char *in_last)
@@ -39,7 +41,7 @@ void UriPar::parseScheme(char *in_current, char *in_last)
 		current++;
 		parseAuthority(current, in_last);
 	}
-	else /*attempt to parse the path query and fragment here*/;
+	else parsePath(in_current, in_last); /*attempt to parse the path query and fragment here*/
 }
 
 void UriPar::parseAuthority(char *in_current, char *in_last)
@@ -54,12 +56,27 @@ void UriPar::parseAuthority(char *in_current, char *in_last)
 			&& (*current != '#')) current++;
 		//authority is quite robust, accept all the inner text here
 		authority.endPosition = current;
-		if (*current == '/') /*parse the path here*/;
+		if (*current == '/') parsePath(current, in_last); /*parse the path here*/
 		else if (*current == '?') /*parse the query here*/;
 		else if (*current == '#') /*parse the query here*/;
 		//sub parse the authority section here into user port blah blah blah
 	}
-	else /*parsePath(in_current here*/;
+	else parsePath(in_current, in_last); /*parsePath(in_current here*/
+}
+void UriPar::parsePath(char *in_current, char *in_last)
+{
+	char *current = in_current;
+	path.startPosition = current;
+	current++;
+	int i = 0;
+	while ((current <= in_last) && (*current != '?') && (*current != '#'))
+	{
+		current++;
+		i++;
+	}
+	path.endPosition = current;
+	if (*current == '?') /*parse the query here*/;
+	else if (*current == '#') /*parse the query here*/;
 }
 bool UriPar::isValidSchemeCharacter(char in_test)
 {

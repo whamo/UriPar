@@ -71,6 +71,36 @@ TEST_CASE("Test authority parsing", "[authority]") {
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
 		REQUIRE(basicTest.authority.endPosition == basicURI + 22);
 	}
+	SECTION("Basic test for authority with no scheme") {
+		char *basicURI = "//www.arsenal.com#somefragment";
+		UriPar basicTest(basicURI);
+		REQUIRE(basicTest.authority.startPosition == basicURI);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 17);
+	}
+}
+TEST_CASE("Test path parsing", "[path]") {
+
+	SECTION("Basic test for path") {
+		char *basicURI = "http://www.arsenal.com/fixtures/first-team";
+		UriPar basicTest(basicURI);
+		REQUIRE(basicTest.path.startPosition == basicURI + 22);
+		REQUIRE(basicTest.path.endPosition == basicURI + 42);
+	}
+	SECTION("Basic test for path starting with slash") {
+		char *basicURI = "/fixtures/first-team";
+		UriPar basicTest(basicURI);
+		char *temp = basicURI + 20;
+		bool will = (basicTest.path.endPosition == basicURI + 20);
+		REQUIRE(basicTest.path.startPosition == basicURI);
+		REQUIRE(basicTest.path.endPosition == basicURI + 20);
+	}
+	SECTION("Basic test for path no initial slash") {
+		char *basicURI = "fixtures/first-team";
+		UriPar basicTest(basicURI);
+		char *temp = basicURI + 19;
+		REQUIRE(basicTest.path.startPosition == basicURI);
+		REQUIRE(basicTest.path.endPosition == basicURI + 19);
+	}
 }
 int main(int argc, char* const argv[])
 {
