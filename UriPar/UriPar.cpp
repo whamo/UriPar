@@ -17,9 +17,14 @@ void UriPar::parseInputUri(char *in_uri)
 	char *current = in_uri;
 	size_t totalSize = strlen(current);
 	if (isalpha(*current)) parseScheme(current, current + totalSize - 1);
-	else if (*current == '/')/*parse the authority section here*/;
+	else if (*current == '/')
+	{
+		char *next = ++current;
+		if (*next == '/') parseAuthority(current, current + totalSize - 1);
+		else /*parse the path section here*/;
+	}
 	else if (*current == ':')/*empty and parse authority section here*/;
-	else /*parse the query and fragment part here*/;
+	else /*parse the path as relative and then query and fragment part here*/;
 }
 
 void UriPar::parseScheme(char *in_current, char *in_last)
@@ -31,11 +36,31 @@ void UriPar::parseScheme(char *in_current, char *in_last)
 	if (*current == ':')
 	{
 		scheme.endPosition = current;
-		//then parse the authority part;
+		current++;
+		parseAuthority(current, in_last);
 	}
-	else /*attempt to parse the query and fragment here*/;
+	else /*attempt to parse the path query and fragment here*/;
 }
 
+void UriPar::parseAuthority(char *in_current, char *in_last)
+{
+	char *current = in_current;
+	char *next = ++current;
+	if (*next == '/')
+	{
+		authority.startPosition = in_current;
+		current++;
+		while ((current <= in_last) && (*current != '/') && (*current != '?') 
+			&& (*current != '#')) current++;
+		//authority is quite robust, accept all the inner text here
+		authority.endPosition = current;
+		if (*current == '/') /*parse the path here*/;
+		else if (*current == '?') /*parse the query here*/;
+		else if (*current == '#') /*parse the query here*/;
+		//sub parse the authority section here into user port blah blah blah
+	}
+	else /*parsePath(in_current here*/;
+}
 bool UriPar::isValidSchemeCharacter(char in_test)
 {
 	return isalnum(in_test) || (in_test == '+') || (in_test == '-') || (in_test == '.');

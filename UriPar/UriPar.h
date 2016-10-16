@@ -39,6 +39,7 @@ private:
 	//make the parse function private
 	void parseInputUri(char *in_uri);
 	void parseScheme(char *in_current, char *in_last);
+	void parseAuthority(char *in_current, char *in_last);
 	void resetUriSegments();
 	bool isValidSchemeCharacter(char in_test);
 	int uriLength;
