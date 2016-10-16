@@ -25,15 +25,17 @@ public:
 	string getQuery() const;
 	string getFragment() const;
 	//and the public segment definitions
-	UriSegment scheme;
-	UriSegment authority;
-	UriSegment path;
-	UriSegment query;
-	UriSegment fragment;
+	UriSegment *scheme;
+	UriSegment *authority;
+	UriSegment *path;
+	UriSegment *query;
+	UriSegment *fragment;
 
 private:
 	//make the parse function private
-	void parseInputUri();
+	void parseInputUri(char *in_uri);
+	void parseScheme(char *in_current, char *in_last);
+	int uriLength;
 	string inputUri;
 };
 
