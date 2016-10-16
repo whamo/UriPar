@@ -41,7 +41,12 @@ void UriPar::parseScheme(char *in_current, char *in_last)
 		current++;
 		parseAuthority(current, in_last);
 	}
-	else parsePath(in_current, in_last); /*attempt to parse the path query and fragment here*/
+	else
+	{
+		//no scheme found reset the start
+		scheme.startPosition = NULL;
+		parsePath(in_current, in_last); /*attempt to parse the path query and fragment here*/
+	}
 }
 
 void UriPar::parseAuthority(char *in_current, char *in_last)
