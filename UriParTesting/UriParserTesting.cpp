@@ -309,6 +309,97 @@ TEST_CASE("Test query and fragment parsing", "[query and fragment]") {
 		REQUIRE(basicTest.fragment.endPosition == basicURI + 44);
 	}
 }
+TEST_CASE("Test simple authority parsing", "[authority parsing]") {
+
+	SECTION("Basic test for authority parsing") {
+		char *basicURI = "//username:password@www.arsenal.com:80";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == NULL);
+		REQUIRE(basicTest.scheme.endPosition == NULL);
+		REQUIRE(basicTest.authority.startPosition == basicURI);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 38);
+		REQUIRE(basicTest.username.startPosition == basicURI + 2);
+		REQUIRE(basicTest.username.endPosition == basicURI + 10);
+		REQUIRE(basicTest.password.startPosition == basicURI + 11);
+		REQUIRE(basicTest.password.endPosition == basicURI + 19);
+		REQUIRE(basicTest.host.startPosition == basicURI + 20);
+		REQUIRE(basicTest.host.endPosition == basicURI + 35);
+		REQUIRE(basicTest.port.startPosition == basicURI + 36);
+		REQUIRE(basicTest.port.endPosition == basicURI + 38);
+		REQUIRE(basicTest.path.startPosition == NULL);
+		REQUIRE(basicTest.path.endPosition == NULL);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+	SECTION("Basic test for authority parsing, no password") {
+		char *basicURI = "//username@www.arsenal.com:80";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == NULL);
+		REQUIRE(basicTest.scheme.endPosition == NULL);
+		REQUIRE(basicTest.authority.startPosition == basicURI);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 38);
+		REQUIRE(basicTest.username.startPosition == basicURI + 2);
+		REQUIRE(basicTest.username.endPosition == basicURI + 10);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == basicURI + 11);
+		REQUIRE(basicTest.host.endPosition == basicURI + 26);
+		REQUIRE(basicTest.port.startPosition == basicURI + 27);
+		REQUIRE(basicTest.port.endPosition == basicURI + 29);
+		REQUIRE(basicTest.path.startPosition == NULL);
+		REQUIRE(basicTest.path.endPosition == NULL);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+	SECTION("Basic test for authority parsing") {
+		char *basicURI = "//www.arsenal.com:80";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == NULL);
+		REQUIRE(basicTest.scheme.endPosition == NULL);
+		REQUIRE(basicTest.authority.startPosition == basicURI);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 20);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == basicURI + 2);
+		REQUIRE(basicTest.host.endPosition == basicURI + 17);
+		REQUIRE(basicTest.port.startPosition == basicURI + 18);
+		REQUIRE(basicTest.port.endPosition == basicURI + 20);
+		REQUIRE(basicTest.path.startPosition == NULL);
+		REQUIRE(basicTest.path.endPosition == NULL);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+	SECTION("Basic test for authority parsing") {
+		char *basicURI = "//www.arsenal.com";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == NULL);
+		REQUIRE(basicTest.scheme.endPosition == NULL);
+		REQUIRE(basicTest.authority.startPosition == basicURI);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 20);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == basicURI + 2);
+		REQUIRE(basicTest.host.endPosition == basicURI + 17);
+		REQUIRE(basicTest.port.startPosition == NULL);
+		REQUIRE(basicTest.port.endPosition == NULL);
+		REQUIRE(basicTest.path.startPosition == NULL);
+		REQUIRE(basicTest.path.endPosition == NULL);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+}
 int main(int argc, char* const argv[])
 {
 	int result = Catch::Session().run(argc, argv);

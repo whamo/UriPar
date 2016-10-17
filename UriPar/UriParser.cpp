@@ -26,7 +26,7 @@ void UriParser::parseInputUri(char *in_uri)
 	else if (*current == ':') parseAuthority(current, current + totalSize - 1);
 	else if (*current == '?') parseQuery(current, current + totalSize - 1); /* parse as query - empty scheme authority and path */
 	else if (*current == '#') parseFragment(current, current + totalSize - 1); /* parse as fragment - empty scheme authority path and query */
-	else /*not possible to parse this string*/;
+	else /*could be the remainder of pchar % - _ . ~ - then parse as path*/;
 }
 
 void UriParser::parseScheme(char *in_current, char *in_last)
