@@ -71,12 +71,16 @@ void UriParser::parseAuthority(char *in_current, char *in_last)
 void UriParser::parsePath(char *in_current, char *in_last)
 {
 	char *current = in_current;
-	path.startPosition = current;
-	current++;
-	while ((current <= in_last) && (*current != '?') && (*current != '#')) current++;
-	path.endPosition = current;
-	if (*current == '?') parseQuery(current, in_last); /*parse the query here*/
-	else if (*current == '#') parseFragment(current, in_last); /*parse the fragment here*/
+	//note that the path may be empty - i.e. this could already be the end of the string
+	if (current < in_last)
+	{
+		path.startPosition = current;
+		current++;
+		while ((current <= in_last) && (*current != '?') && (*current != '#')) current++;
+		path.endPosition = current;
+		if (*current == '?') parseQuery(current, in_last); /*parse the query here*/
+		else if (*current == '#') parseFragment(current, in_last); /*parse the fragment here*/
+	}
 }
 void UriParser::parseQuery(char *in_current, char *in_last)
 {
