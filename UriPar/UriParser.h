@@ -21,6 +21,10 @@ public:
 	//get functions will pull out strings of the different segments
 	string getScheme() const;
 	string getAuthority() const;
+	string getUsername() const;
+	string getPassword() const;
+	string getHost() const;
+	string getPort() const;
 	string getPath() const;
 	string getQuery() const;
 	string getFragment() const;

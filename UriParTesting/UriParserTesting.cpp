@@ -401,6 +401,59 @@ TEST_CASE("Test simple authority parsing", "[authority parsing]") {
 		REQUIRE(basicTest.fragment.endPosition == NULL);
 	}
 }
+TEST_CASE("Test simple parsing with get functions", "[simple parsing]") {
+
+	SECTION("Basic test for authority parsing") {
+		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=false#somefragment";
+		UriParser basicTest(basicURI);
+		string actualScheme("http");
+		string actualUsername("username");
+		string actualPassword("password");
+		string actualHost("www.arsenal.com");
+		string actualPort("80");
+		string actualPath("/path1/path2");
+		string actualQuery("query=false");
+		string actualFragment("somefragment");
+		string actualAuthority("//username:password@www.arsenal.com:80/path1/path2");
+		string parseScheme = basicTest.getScheme();
+		string parseUsername = basicTest.getUsername();
+		string parsePassword = basicTest.getPassword();
+		string parseHost = basicTest.getHost();
+		string parsePort = basicTest.getPort();
+		string parsePath = basicTest.getPath();
+		string parseQuery = basicTest.getQuery();
+		string parseFragment = basicTest.getFragment();
+		string parseAuthority = basicTest.getAuthority();
+		
+		REQUIRE(actualScheme.compare(parseScheme) == 0);
+		REQUIRE(actualUsername.compare(parseUsername) == 0);
+		REQUIRE(actualPassword.compare(parsePassword) == 0);
+		REQUIRE(actualHost.compare(parseHost) == 0);
+		REQUIRE(actualPort.compare(parsePort) == 0);
+		REQUIRE(actualPath.compare(parsePath) == 0);
+		REQUIRE(actualQuery.compare(parseQuery) == 0);
+		REQUIRE(actualFragment.compare(parseFragment) == 0);
+		REQUIRE(actualAuthority.compare(parseAuthority) == 0);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
+		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 43);
+		REQUIRE(basicTest.username.startPosition == basicURI + 7);
+		REQUIRE(basicTest.username.endPosition == basicURI + 15);
+		REQUIRE(basicTest.password.startPosition == basicURI + 16);
+		REQUIRE(basicTest.password.endPosition == basicURI + 24);
+		REQUIRE(basicTest.host.startPosition == basicURI + 25);
+		REQUIRE(basicTest.host.endPosition == basicURI + 40);
+		REQUIRE(basicTest.port.startPosition == basicURI + 41);
+		REQUIRE(basicTest.port.endPosition == basicURI + 43);
+		REQUIRE(basicTest.path.startPosition == basicURI + 43);
+		REQUIRE(basicTest.path.endPosition == basicURI + 55);
+		REQUIRE(basicTest.query.startPosition == basicURI + 56);
+		REQUIRE(basicTest.query.endPosition == basicURI + 67);
+		REQUIRE(basicTest.fragment.startPosition == basicURI + 68);
+		REQUIRE(basicTest.fragment.endPosition == basicURI + 80);
+	}
+}
 int main(int argc, char* const argv[])
 {
 	int result = Catch::Session().run(argc, argv);

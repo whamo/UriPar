@@ -1,4 +1,5 @@
 #include "UriParser.h"
+using namespace std;
 
 UriParser::UriParser(char *in_uri)
 {
