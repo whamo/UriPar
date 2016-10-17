@@ -42,6 +42,7 @@ private:
 	void parseAuthority(char *in_current, char *in_last);
 	void parsePath(char *in_current, char *in_last);
 	void parseQuery(char *in_current, char *in_last);
+	void parseFragment(char *in_current, char *in_last);
 	void resetUriSegments();
 	bool isValidSchemeCharacter(char in_test);
 	int uriLength;

@@ -25,7 +25,7 @@ void UriParser::parseInputUri(char *in_uri)
 	}
 	else if (*current == ':') parseAuthority(current, current + totalSize - 1);
 	else if (*current == '?') parseQuery(current, current + totalSize - 1); /* parse as query - empty scheme authority and path */
-	else if (*current == '#')/* parse as fragment - empty scheme authority path and query */;
+	else if (*current == '#') parseFragment(current, current + totalSize - 1); /* parse as fragment - empty scheme authority path and query */
 	else /*not possible to parse this string*/;
 }
 
@@ -63,7 +63,7 @@ void UriParser::parseAuthority(char *in_current, char *in_last)
 		authority.endPosition = current;
 		if (*current == '/') parsePath(current, in_last); /*parse the path here*/
 		else if (*current == '?') parseQuery(current, in_last); /*parse the query here*/
-		else if (*current == '#') /*parse the fragment here*/;
+		else if (*current == '#') parseFragment(current, in_last); /*parse the fragment here*/
 		//sub parse the authority section here into user port blah blah blah
 	}
 	else parsePath(in_current, in_last); /*parsePath(in_current here*/
@@ -76,7 +76,7 @@ void UriParser::parsePath(char *in_current, char *in_last)
 	while ((current <= in_last) && (*current != '?') && (*current != '#')) current++;
 	path.endPosition = current;
 	if (*current == '?') parseQuery(current, in_last); /*parse the query here*/
-	else if (*current == '#') /*parse the fragment here*/;
+	else if (*current == '#') parseFragment(current, in_last); /*parse the fragment here*/
 }
 void UriParser::parseQuery(char *in_current, char *in_last)
 {
@@ -85,7 +85,15 @@ void UriParser::parseQuery(char *in_current, char *in_last)
 	query.startPosition = current;
 	while ((current <= in_last) && (*current != '#')) current++;
 	query.endPosition = current;
-	if (*current == '#') /*parse the fragment here*/;
+	if (*current == '#') parseFragment(current, in_last);/*parse the fragment here*/
+}
+void UriParser::parseFragment(char *in_current, char *in_last)
+{
+	char *current = in_current;
+	current++; //found the # character move to the next
+	fragment.startPosition = current;
+	while (current <= in_last) current++;
+	fragment.endPosition = current;
 }
 bool UriParser::isValidSchemeCharacter(char in_test)
 {
