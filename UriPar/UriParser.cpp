@@ -73,12 +73,7 @@ void UriParser::parsePath(char *in_current, char *in_last)
 	char *current = in_current;
 	path.startPosition = current;
 	current++;
-	int i = 0;
-	while ((current <= in_last) && (*current != '?') && (*current != '#'))
-	{
-		current++;
-		i++;
-	}
+	while ((current <= in_last) && (*current != '?') && (*current != '#')) current++;
 	path.endPosition = current;
 	if (*current == '?') /*parse the query here*/;
 	else if (*current == '#') /*parse the fragment here*/;
