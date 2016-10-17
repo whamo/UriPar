@@ -38,8 +38,6 @@ public:
 	UriSegment path;
 	UriSegment query;
 	UriSegment fragment;
-	//this is the error pointer
-	char *errorLocation;
 
 private:
 	//make the parse function private
@@ -54,6 +52,9 @@ private:
 	void parseFragment(char *in_current, char *in_last);
 	void resetUriSegments();
 	bool isValidSchemeCharacter(char in_test);
+	bool isUnreservedCharacter(char in_test);
+	bool isPercentEncoded(char in_test);
+	bool isSubDelimiter(char in_test);
 	int uriLength;
 	string inputUri;
 };

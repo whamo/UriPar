@@ -166,6 +166,22 @@ bool UriParser::isValidSchemeCharacter(char in_test)
 	return isalnum(in_test) || (in_test == '+') || (in_test == '-') || (in_test == '.');
 }
 
+bool UriParser::isUnreservedCharacter(char in_test)
+{
+	return isalnum(in_test) || (in_test == '-') || (in_test == '_') || (in_test == '.') || (in_test == '~');
+}
+
+bool UriParser::isPercentEncoded(char in_test)
+{
+	return isalnum(in_test) || (in_test == '%');
+}
+
+bool UriParser::isSubDelimiter(char in_test)
+{
+	return (in_test == '!') || (in_test == '$') || (in_test == '&') || (in_test == '\'') || (in_test == '(') || (in_test == ')')
+		|| (in_test == '*') || (in_test == '+') || (in_test == ',') || (in_test == ';') || (in_test == '=');
+}
+
 std::string UriParser::getScheme() const
 {
 	if ((scheme.startPosition != NULL) && (scheme.endPosition != NULL))
