@@ -414,7 +414,7 @@ TEST_CASE("Test simple parsing with get functions", "[simple parsing]") {
 		string actualPath("/path1/path2");
 		string actualQuery("query=false");
 		string actualFragment("somefragment");
-		string actualAuthority("//username:password@www.arsenal.com:80/path1/path2");
+		string actualAuthority("//username:password@www.arsenal.com:80");
 		string parseScheme = basicTest.getScheme();
 		string parseUsername = basicTest.getUsername();
 		string parsePassword = basicTest.getPassword();

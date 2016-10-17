@@ -166,6 +166,87 @@ bool UriParser::isValidSchemeCharacter(char in_test)
 	return isalnum(in_test) || (in_test == '+') || (in_test == '-') || (in_test == '.');
 }
 
+std::string UriParser::getScheme() const
+{
+	if ((scheme.startPosition != NULL) && (scheme.endPosition != NULL))
+	{
+		return std::string(scheme.startPosition, scheme.endPosition - scheme.startPosition);
+	}
+	else return std::string();
+}
+
+std::string UriParser::getAuthority() const
+{
+	if ((authority.startPosition != NULL) && (authority.endPosition != NULL))
+	{
+		return std::string(authority.startPosition, authority.endPosition - authority.startPosition);
+	}
+	else return std::string();
+}
+
+std::string UriParser::getUsername() const
+{
+	if ((username.startPosition != NULL) && (username.endPosition != NULL))
+	{
+		return std::string(username.startPosition, username.endPosition - username.startPosition);
+	}
+	else return std::string();
+}
+
+std::string UriParser::getPassword() const
+{
+	if ((password.startPosition != NULL) && (password.endPosition != NULL))
+	{
+		return std::string(password.startPosition, password.endPosition - password.startPosition);
+	}
+	else return std::string();
+}
+
+std::string UriParser::getHost() const
+{
+	if ((host.startPosition != NULL) && (host.endPosition != NULL))
+	{
+		return std::string(host.startPosition, host.endPosition - host.startPosition);
+	}
+	else return std::string();
+}
+
+std::string UriParser::getPort() const
+{
+	if ((port.startPosition != NULL) && (port.endPosition != NULL))
+	{
+		return std::string(port.startPosition, port.endPosition - port.startPosition);
+	}
+	else return std::string();
+}
+
+std::string UriParser::getPath() const
+{
+	if ((path.startPosition != NULL) && (path.endPosition != NULL))
+	{
+		return std::string(path.startPosition, path.endPosition - path.startPosition);
+	}
+	else return std::string();
+}
+
+std::string UriParser::getQuery() const
+{
+	if ((query.startPosition != NULL) && (query.endPosition != NULL))
+	{
+		return std::string(query.startPosition, query.endPosition - query.startPosition);
+	}
+	else return std::string();
+}
+
+std::string UriParser::getFragment() const
+{
+	if ((fragment.startPosition != NULL) && (fragment.endPosition != NULL))
+	{
+		return std::string(fragment.startPosition, fragment.endPosition - fragment.startPosition);
+	}
+	else return std::string();
+}
+
 void UriParser::resetUriSegments()
 {
 	scheme.startPosition = NULL;
