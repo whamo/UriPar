@@ -40,6 +40,9 @@ private:
 	void parseInputUri(char *in_uri);
 	void parseScheme(char *in_current, char *in_last);
 	void parseAuthority(char *in_current, char *in_last);
+	void subParseAuthority(char *in_start, char *in_end);
+	void parseUsernamePassword(char *in_current, char *in_end);
+	void parseHost(char *in_start, char *in_end);
 	void parsePath(char *in_current, char *in_last);
 	void parseQuery(char *in_current, char *in_last);
 	void parseFragment(char *in_current, char *in_last);

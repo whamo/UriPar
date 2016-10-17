@@ -64,9 +64,70 @@ void UriParser::parseAuthority(char *in_current, char *in_last)
 		if (*current == '/') parsePath(current, in_last); /*parse the path here*/
 		else if (*current == '?') parseQuery(current, in_last); /*parse the query here*/
 		else if (*current == '#') parseFragment(current, in_last); /*parse the fragment here*/
-		//sub parse the authority section here into user port blah blah blah
+		//sub parse the authority section here
+		subParseAuthority(authority.startPosition, authority.endPosition-1);
 	}
 	else parsePath(in_current, in_last); /*parsePath(in_current here*/
+}
+void UriParser::subParseAuthority(char *in_start, char *in_end)
+{
+	char *current = in_start;
+	//always have a double slash to start authority
+	current++;
+	current++;
+	parseUsernamePassword(current, in_end);
+}
+void UriParser::parseUsernamePassword(char *in_current, char *in_end)
+{
+	char *current = in_current;
+	//authority may be empty
+	if (current < in_end)
+	{
+		username.startPosition = current;
+		while ((current <= in_end) && (*current != '/') && (*current != '?')
+			&& (*current != '#') && (*current != '@'))
+		{
+			if (*current == ':')
+			{
+				username.endPosition = current;
+				current++;
+				password.startPosition = current;
+			}
+			else current++;
+		}
+		if (*current == '@')
+		{
+			if (password.startPosition == NULL) username.endPosition = current;
+			else password.endPosition = current;
+			parseHost(++current, in_end);
+		}
+		else
+		{
+			username.startPosition = NULL;
+			username.endPosition = NULL;
+			password.startPosition = NULL;
+			password.endPosition = NULL;
+			parseHost(in_current, in_end);
+		}
+	}
+}
+void UriParser::parseHost(char *in_current, char *in_end)
+{
+	char *current = in_current;
+	host.startPosition = current;
+	while ((current <= in_end) && (*current != '/') && (*current != '?')
+		&& (*current != '#'))
+	{
+		if (*current == ':')
+		{
+			host.endPosition = current;
+			current++;
+			port.startPosition = current;
+		}
+		else current++;
+	}
+	if (port.startPosition == NULL) host.endPosition = current;
+	else port.endPosition = current;
 }
 void UriParser::parsePath(char *in_current, char *in_last)
 {
@@ -110,6 +171,10 @@ void UriParser::resetUriSegments()
 	scheme.endPosition = NULL;
 	authority.startPosition = NULL;
 	authority.endPosition = NULL;
+	username.startPosition = NULL;
+	username.endPosition = NULL;
+	password.startPosition = NULL;
+	password.endPosition = NULL;
 	host.startPosition = NULL;
 	host.endPosition = NULL;
 	port.startPosition = NULL;

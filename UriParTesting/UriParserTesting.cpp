@@ -336,10 +336,11 @@ TEST_CASE("Test simple authority parsing", "[authority parsing]") {
 	SECTION("Basic test for authority parsing, no password") {
 		char *basicURI = "//username@www.arsenal.com:80";
 		UriParser basicTest(basicURI);
+		char *temp = basicURI + 29;
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == basicURI);
-		REQUIRE(basicTest.authority.endPosition == basicURI + 38);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 29);
 		REQUIRE(basicTest.username.startPosition == basicURI + 2);
 		REQUIRE(basicTest.username.endPosition == basicURI + 10);
 		REQUIRE(basicTest.password.startPosition == NULL);
@@ -383,7 +384,7 @@ TEST_CASE("Test simple authority parsing", "[authority parsing]") {
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == basicURI);
-		REQUIRE(basicTest.authority.endPosition == basicURI + 20);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 17);
 		REQUIRE(basicTest.username.startPosition == NULL);
 		REQUIRE(basicTest.username.endPosition == NULL);
 		REQUIRE(basicTest.password.startPosition == NULL);
