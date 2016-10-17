@@ -42,11 +42,16 @@ void UriParser::parseScheme(char *in_current, char *in_last)
 		current++;
 		parseAuthority(current, in_last);
 	}
-	else
+	else if ((isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == ':') || (*current == '@') || (*current == '/')))
 	{
 		//no scheme found reset the start
 		scheme.startPosition = NULL;
 		parsePath(in_current, in_last); /*attempt to parse the path (note - cannot be authority) query and fragment here*/
+	}
+	else
+	{
+		scheme.startPosition = NULL;
+		throw invalid_argument("Malformed string at scheme location " + to_string(current - in_current));
 	}
 }
 
@@ -88,6 +93,10 @@ void UriParser::parseUsernamePassword(char *in_current, char *in_end)
 		while ((current <= in_end) && (*current != '/') && (*current != '?')
 			&& (*current != '#') && (*current != '@'))
 		{
+			if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == ':')))
+			{
+				throw invalid_argument("Malformed string at username location " + to_string(current - username.startPosition) + " chars from start of username");
+			}
 			if (*current == ':')
 			{
 				username.endPosition = current;
@@ -119,6 +128,11 @@ void UriParser::parseHost(char *in_current, char *in_end)
 	while ((current <= in_end) && (*current != '/') && (*current != '?')
 		&& (*current != '#'))
 	{
+		if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == '[') || (*current == ']') || (*current == ':')))
+		{
+			throw invalid_argument("Malformed string at host location " + to_string(current - host.startPosition) + " chars from start of host name");
+		}
+		if ((port.startPosition != NULL) && !(isdigit(*current))) throw invalid_argument("Malformed string at port location " + to_string(current - port.startPosition) + " chars from start of port");
 		if (*current == ':')
 		{
 			host.endPosition = current;
@@ -138,7 +152,15 @@ void UriParser::parsePath(char *in_current, char *in_last)
 	{
 		path.startPosition = current;
 		current++;
-		while ((current <= in_last) && (*current != '?') && (*current != '#')) current++;
+		while ((current <= in_last) && (*current != '?') && (*current != '#'))
+		{
+			//ignoring the extra conditions on : and @ for now
+			if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == ':') || (*current == '@') || (*current == '/')))
+			{
+				throw invalid_argument("Malformed string at path location " + to_string(current - path.startPosition) + " chars from start of path");
+			}
+			current++;
+		}
 		path.endPosition = current;
 		if (*current == '?') parseQuery(current, in_last); /*parse the query here*/
 		else if (*current == '#') parseFragment(current, in_last); /*parse the fragment here*/
@@ -149,7 +171,14 @@ void UriParser::parseQuery(char *in_current, char *in_last)
 	char *current = in_current;
 	current++; //found the ? character move to the next
 	query.startPosition = current;
-	while ((current <= in_last) && (*current != '#')) current++;
+	while ((current <= in_last) && (*current != '#'))
+	{
+		if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == ':') || (*current == '@') || (*current == '/') || (*current == '?')))
+		{
+			throw invalid_argument("Malformed string at query location " + to_string(current - query.startPosition) + " chars from start of query");
+		}
+		current++;
+	}
 	query.endPosition = current;
 	if (*current == '#') parseFragment(current, in_last);/*parse the fragment here*/
 }
@@ -158,7 +187,14 @@ void UriParser::parseFragment(char *in_current, char *in_last)
 	char *current = in_current;
 	current++; //found the # character move to the next
 	fragment.startPosition = current;
-	while (current <= in_last) current++;
+	while (current <= in_last)
+	{
+		if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == ':') || (*current == '@') || (*current == '/') || (*current == '?')))
+		{
+			throw invalid_argument("Malformed string at fragment location " + to_string(current - fragment.startPosition) + " chars from start of fragment");
+		}
+		current++;
+	}
 	fragment.endPosition = current;
 }
 bool UriParser::isValidSchemeCharacter(char in_test)
@@ -283,5 +319,4 @@ void UriParser::resetUriSegments()
 	query.endPosition = NULL;
 	fragment.startPosition = NULL;
 	fragment.endPosition = NULL;
-	errorLocation = NULL;
 }

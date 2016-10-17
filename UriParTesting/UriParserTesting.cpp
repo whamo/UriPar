@@ -474,7 +474,7 @@ TEST_CASE("Exception testing", "[exception testing]") {
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:password@www.ars[]enal.com:80/path1/path2?query=false#somefragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		REQUIRE_NOTHROW(UriParser basicTest(basicURI));
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:password@www.ars@enal.com:80/path1/path2?query=false#somefragment";
@@ -497,19 +497,11 @@ TEST_CASE("Exception testing", "[exception testing]") {
 		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
-		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=f@alse#somefragment";
+		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=f[]alse#somefragment";
 		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
-		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=false#som@efragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
-	}
-	SECTION("Basic test for authority parsing") {
-		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=false#som:efragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
-	}
-	SECTION("Basic test for authority parsing") {
-		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=fa:lse#somefragment";
+		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=false#som[]efragment";
 		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
 	}
 }
