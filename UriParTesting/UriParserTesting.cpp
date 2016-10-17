@@ -454,6 +454,13 @@ TEST_CASE("Test simple parsing with get functions", "[simple parsing]") {
 		REQUIRE(basicTest.fragment.endPosition == basicURI + 80);
 	}
 }
+TEST_CASE("Exception testing", "[exception testing]") {
+
+	SECTION("Basic test for authority parsing") {
+		char *basicURI = NULL;
+		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+	}
+}
 int main(int argc, char* const argv[])
 {
 	int result = Catch::Session().run(argc, argv);

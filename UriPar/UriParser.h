@@ -38,6 +38,8 @@ public:
 	UriSegment path;
 	UriSegment query;
 	UriSegment fragment;
+	//this is the error pointer
+	char *errorLocation;
 
 private:
 	//make the parse function private

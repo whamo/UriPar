@@ -12,7 +12,7 @@ void UriParser::parseInputUri(char *in_uri)
 	if (in_uri == NULL)
 	{
 		//input is a null string - throw an exception
-		throw("Null input string exception");
+		throw invalid_argument("Null input string exception");
 	}
 	//try to parse the scheme
 	char *current = in_uri;
@@ -267,4 +267,5 @@ void UriParser::resetUriSegments()
 	query.endPosition = NULL;
 	fragment.startPosition = NULL;
 	fragment.endPosition = NULL;
+	errorLocation = NULL;
 }
