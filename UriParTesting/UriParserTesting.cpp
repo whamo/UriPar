@@ -207,7 +207,7 @@ TEST_CASE("Test query and fragment parsing", "[query and fragment]") {
 		REQUIRE(basicTest.path.startPosition == basicURI + 22);
 		REQUIRE(basicTest.path.endPosition == basicURI + 42);
 		REQUIRE(basicTest.query.startPosition == basicURI + 43);
-		REQUIRE(basicTest.query.endPosition == basicURI + 55);
+		REQUIRE(basicTest.query.endPosition == basicURI + 54);
 	}
 	SECTION("Basic test for path starting with slash followed by query and fragment") {
 		char *basicURI = "/fixtures/first-team?query=false#somefragment";
@@ -219,7 +219,7 @@ TEST_CASE("Test query and fragment parsing", "[query and fragment]") {
 		REQUIRE(basicTest.path.startPosition == basicURI);
 		REQUIRE(basicTest.path.endPosition == basicURI + 20);
 		REQUIRE(basicTest.query.startPosition == basicURI + 21);
-		REQUIRE(basicTest.query.endPosition == basicURI + 33);
+		REQUIRE(basicTest.query.endPosition == basicURI + 32);
 	}
 	SECTION("Basic test for path no initial slash followed by query and fragment") {
 		char *basicURI = "fixtures/first-team?query=false#somefragment";
@@ -231,7 +231,7 @@ TEST_CASE("Test query and fragment parsing", "[query and fragment]") {
 		REQUIRE(basicTest.path.startPosition == basicURI);
 		REQUIRE(basicTest.path.endPosition == basicURI + 19);
 		REQUIRE(basicTest.query.startPosition == basicURI + 20);
-		REQUIRE(basicTest.query.endPosition == basicURI + 33);
+		REQUIRE(basicTest.query.endPosition == basicURI + 31);
 	}
 }
 int main(int argc, char* const argv[])

@@ -24,7 +24,7 @@ void UriParser::parseInputUri(char *in_uri)
 		else parsePath(--current, current + totalSize - 1);
 	}
 	else if (*current == ':') parseAuthority(current, current + totalSize - 1);
-	else if (*current == '?')/* parse as query - empty scheme authority and path */;
+	else if (*current == '?') parseQuery(current, current + totalSize - 1); /* parse as query - empty scheme authority and path */
 	else if (*current == '#')/* parse as fragment - empty scheme authority path and query */;
 	else /*not possible to parse this string*/;
 }
@@ -62,7 +62,7 @@ void UriParser::parseAuthority(char *in_current, char *in_last)
 		//authority is quite robust, accept all the inner text here
 		authority.endPosition = current;
 		if (*current == '/') parsePath(current, in_last); /*parse the path here*/
-		else if (*current == '?') /*parse the query here*/;
+		else if (*current == '?') parseQuery(current, in_last); /*parse the query here*/
 		else if (*current == '#') /*parse the fragment here*/;
 		//sub parse the authority section here into user port blah blah blah
 	}
@@ -75,8 +75,17 @@ void UriParser::parsePath(char *in_current, char *in_last)
 	current++;
 	while ((current <= in_last) && (*current != '?') && (*current != '#')) current++;
 	path.endPosition = current;
-	if (*current == '?') /*parse the query here*/;
+	if (*current == '?') parseQuery(current, in_last); /*parse the query here*/
 	else if (*current == '#') /*parse the fragment here*/;
+}
+void UriParser::parseQuery(char *in_current, char *in_last)
+{
+	char *current = in_current;
+	current++; //found the ? character move to the next
+	query.startPosition = current;
+	while ((current <= in_last) && (*current != '#')) current++;
+	query.endPosition = current;
+	if (*current == '#') /*parse the fragment here*/;
 }
 bool UriParser::isValidSchemeCharacter(char in_test)
 {
