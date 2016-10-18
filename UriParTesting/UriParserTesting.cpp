@@ -777,6 +777,28 @@ TEST_CASE("Examples from the standard", "[examples]") {
 		REQUIRE(basicTest.fragment.startPosition == NULL);
 		REQUIRE(basicTest.fragment.endPosition == NULL);
 	}
+	SECTION("Example (extra)") {
+		char *basicURI = "%1234";
+		UriParser<char, string> basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == NULL);
+		REQUIRE(basicTest.scheme.endPosition == NULL);
+		REQUIRE(basicTest.authority.startPosition == NULL);
+		REQUIRE(basicTest.authority.endPosition == NULL);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == NULL);
+		REQUIRE(basicTest.host.endPosition == NULL);
+		REQUIRE(basicTest.port.startPosition == NULL);
+		REQUIRE(basicTest.port.endPosition == NULL);
+		REQUIRE(basicTest.path.startPosition == basicURI);
+		REQUIRE(basicTest.path.endPosition == basicURI + 5);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
 }
 TEST_CASE("Test scheme parsing wstring", "[scheme]") {
 
@@ -1550,10 +1572,55 @@ TEST_CASE("Examples from the standard wstring", "[examples]") {
 		REQUIRE(basicTest.fragment.startPosition == NULL);
 		REQUIRE(basicTest.fragment.endPosition == NULL);
 	}
+	SECTION("Example (extra)") {
+		wchar_t *basicURI = L"%1234";
+		UriParser<wchar_t, wstring> basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == NULL);
+		REQUIRE(basicTest.scheme.endPosition == NULL);
+		REQUIRE(basicTest.authority.startPosition == NULL);
+		REQUIRE(basicTest.authority.endPosition == NULL);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == NULL);
+		REQUIRE(basicTest.host.endPosition == NULL);
+		REQUIRE(basicTest.port.startPosition == NULL);
+		REQUIRE(basicTest.port.endPosition == NULL);
+		REQUIRE(basicTest.path.startPosition == basicURI);
+		REQUIRE(basicTest.path.endPosition == basicURI + 5);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
 }
 
 int main(int argc, char* const argv[])
 {
+	string basicURI = "hTtP://username:password@www.ARSEnal.com:80/path1/path2?query=false#somefragment";
+	UriParser<char, string> basicTest(basicURI);
+	cout << basicTest.getScheme() << endl;
+	cout << basicTest.getUsername() << endl;
+	cout << basicTest.getPassword() << endl;
+	cout << basicTest.getHost() << endl;
+	cout << basicTest.getPort() << endl;
+	cout << basicTest.getPath() << endl;
+	cout << basicTest.getQuery() << endl;
+	cout << basicTest.getFragment() << endl;
+	cout << basicTest.getAuthority() << endl;
+
+	wstring wbasicURI = L"hTtP://username:password@www.ARSEnal.com:80/path1/path2?query=false#somefragment";
+	UriParser<wchar_t, wstring> wbasicTest(wbasicURI);
+	wcout << wbasicTest.getScheme() << endl;
+	wcout << wbasicTest.getUsername() << endl;
+	wcout << wbasicTest.getPassword() << endl;
+	wcout << wbasicTest.getHost() << endl;
+	wcout << wbasicTest.getPort() << endl;
+	wcout << wbasicTest.getPath() << endl;
+	wcout << wbasicTest.getQuery() << endl;
+	wcout << wbasicTest.getFragment() << endl;
+	wcout << wbasicTest.getAuthority() << endl;
 	int result = Catch::Session().run(argc, argv);
 	return result;
 }

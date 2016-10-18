@@ -153,7 +153,7 @@ private:
 		else if (*current == ':') parseAuthority(current, current + totalSize - 1);
 		else if (*current == '?') parseQuery(current, current + totalSize - 1); /* parse as query - empty scheme authority and path */
 		else if (*current == '#') parseFragment(current, current + totalSize - 1); /* parse as fragment - empty scheme authority path and query */
-		else /*could be the remainder of pchar % - _ . ~ - then parse as path*/;
+		else parsePath(current, current + totalSize - 1); /*could be the remainder of pchar % - _ . ~ - then parse as path*/
 	}
 	void parseScheme(charType *in_current, charType *in_last)
 	{
