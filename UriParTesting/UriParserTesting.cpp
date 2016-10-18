@@ -457,7 +457,7 @@ TEST_CASE("Test simple parsing with get functions", "[simple parsing]") {
 TEST_CASE("Test string constructor", "[string constructor]") {
 
 	SECTION("Basic test for authority parsing") {
-		string basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=false#somefragment";
+		string basicURI = "hTtP://username:password@www.ARSEnal.com:80/path1/path2?query=false#somefragment";
 		char *thisPntr = &basicURI[0];
 		UriParser basicTest(basicURI);
 		string actualScheme("http");
