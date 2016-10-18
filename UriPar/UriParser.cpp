@@ -93,66 +93,77 @@ void UriParser::subParseAuthority(char *in_start, char *in_end)
 	//always have a double slash to start authority
 	current++;
 	current++;
-	parseUsernamePassword(current, in_end);
+	if (current < in_end)
+	{
+		//user info is optional - there is a special case here when the [] charaters are used for a host
+		if (*current == '[') parseHost(current, in_end);
+		else parseUsernamePassword(current, in_end);
+	}
 }
 void UriParser::parseUsernamePassword(char *in_current, char *in_end)
 {
 	char *current = in_current;
-	//authority may be empty
-	if (current < in_end)
+	username.startPosition = current;
+	while ((current <= in_end) && (*current != '/') && (*current != '?')
+		&& (*current != '#') && (*current != '@'))
 	{
-		username.startPosition = current;
-		while ((current <= in_end) && (*current != '/') && (*current != '?')
-			&& (*current != '#') && (*current != '@'))
+		if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == ':')))
 		{
-			if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == ':')))
-			{
-				throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in username");
-			}
-			if (*current == ':')
-			{
-				username.endPosition = current;
-				current++;
-				password.startPosition = current;
-			}
-			else current++;
+			throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in username");
 		}
-		if (*current == '@')
+		if (*current == ':')
 		{
-			if (password.startPosition == NULL) username.endPosition = current;
-			else password.endPosition = current;
-			parseHost(++current, in_end);
+			username.endPosition = current;
+			current++;
+			password.startPosition = current;
 		}
-		else
-		{
-			username.startPosition = NULL;
-			username.endPosition = NULL;
-			password.startPosition = NULL;
-			password.endPosition = NULL;
-			parseHost(in_current, in_end);
-		}
+		else current++;
+	}
+	if (*current == '@')
+	{
+		if (password.startPosition == NULL) username.endPosition = current;
+		else password.endPosition = current;
+		parseHost(++current, in_end);
+	}
+	else
+	{
+		username.startPosition = NULL;
+		username.endPosition = NULL;
+		password.startPosition = NULL;
+		password.endPosition = NULL;
+		parseHost(in_current, in_end);
 	}
 }
 void UriParser::parseHost(char *in_current, char *in_end)
 {
 	char *current = in_current;
+	//when the ope square bracket is found, the colon does not indicate a port unless it is closed again
+	bool parseColonSwitch = false;
 	host.startPosition = current;
 	while ((current <= in_end) && (*current != '/') && (*current != '?')
 		&& (*current != '#'))
 	{
+		if (*current == '[') parseColonSwitch = true;
 		if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == '[') || (*current == ']') || (*current == ':')))
 		{
 			throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in host");
 		}
-		if ((port.startPosition != NULL) && !(isdigit(*current))) throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in port");
-		if (*current == ':')
+		if ((port.startPosition != NULL) && !(isdigit(*current))) throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in host");
+		if ((*current == ':')&&(!parseColonSwitch))
 		{
 			host.endPosition = current;
 			current++;
 			port.startPosition = current;
 		}
+		else if ((*current == ']') && (parseColonSwitch))
+		{
+			parseColonSwitch = false;
+			current++;
+			//must still find the end as per usual
+		}
 		else current++;
 	}
+	if (parseColonSwitch) throw invalid_argument("Malformed string IPv6/IPvFut address square bracket not closed " + to_string(current - uriInput) + " in host");
 	if (port.startPosition == NULL) host.endPosition = current;
 	else port.endPosition = current;
 }

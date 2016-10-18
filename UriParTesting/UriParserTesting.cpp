@@ -558,6 +558,10 @@ TEST_CASE("Exception testing", "[exception testing]") {
 		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=false#som[]efragment";
 		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
 	}
+	SECTION("Basic test for authority parsing") {
+		char *basicURI = "ldap://[2001:db8::7/c=GB?objectClass?one";
+		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+	}
 }
 TEST_CASE("Examples from the standard", "[examples]") {
 
@@ -612,19 +616,41 @@ TEST_CASE("Examples from the standard", "[examples]") {
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
-		REQUIRE(basicTest.authority.endPosition == basicURI + 14);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 20);
 		REQUIRE(basicTest.username.startPosition == NULL);
 		REQUIRE(basicTest.username.endPosition == NULL);
 		REQUIRE(basicTest.password.startPosition == NULL);
 		REQUIRE(basicTest.password.endPosition == NULL);
 		REQUIRE(basicTest.host.startPosition == basicURI + 7);
-		REQUIRE(basicTest.host.endPosition == basicURI + 14);
+		REQUIRE(basicTest.host.endPosition == basicURI + 20);
 		REQUIRE(basicTest.port.startPosition == NULL);
 		REQUIRE(basicTest.port.endPosition == NULL);
-		REQUIRE(basicTest.path.startPosition == basicURI + 14);
-		REQUIRE(basicTest.path.endPosition == basicURI + 19);
-		REQUIRE(basicTest.query.startPosition == basicURI + 20);
-		REQUIRE(basicTest.query.endPosition == basicURI + 35);
+		REQUIRE(basicTest.path.startPosition == basicURI + 20);
+		REQUIRE(basicTest.path.endPosition == basicURI + 25);
+		REQUIRE(basicTest.query.startPosition == basicURI + 26);
+		REQUIRE(basicTest.query.endPosition == basicURI + 41);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+	SECTION("Example 3a - made up") {
+		char *basicURI = "ldap://[2001:db8::7]:1800/c=GB?objectClass?one";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
+		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 25);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == basicURI + 7);
+		REQUIRE(basicTest.host.endPosition == basicURI + 20);
+		REQUIRE(basicTest.port.startPosition == basicURI + 21);
+		REQUIRE(basicTest.port.endPosition == basicURI + 25);
+		REQUIRE(basicTest.path.startPosition == basicURI + 25);
+		REQUIRE(basicTest.path.endPosition == basicURI + 30);
+		REQUIRE(basicTest.query.startPosition == basicURI + 31);
+		REQUIRE(basicTest.query.endPosition == basicURI + 46);
 		REQUIRE(basicTest.fragment.startPosition == NULL);
 		REQUIRE(basicTest.fragment.endPosition == NULL);
 	}
