@@ -142,8 +142,8 @@ private:
 		}
 		//try to parse the scheme
 		charType *current = in_uri;
-		size_t totalSize = strlen(current);
-		if (isalpha(*current)) parseScheme(current, current + totalSize - 1);
+		size_t totalSize = genericGetStringLength(current);
+		if (genericIsAlpha(*current)) parseScheme(current, current + totalSize - 1);
 		else if (*current == '/')
 		{
 			charType *next = ++current;
@@ -260,7 +260,7 @@ private:
 			{
 				throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in host");
 			}
-			if ((port.startPosition != NULL) && !(isdigit(*current))) throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in host");
+			if ((port.startPosition != NULL) && !(genericIsDigit(*current))) throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in host");
 			if ((*current == ':') && (!parseColonSwitch))
 			{
 				host.endPosition = current;
@@ -355,20 +355,53 @@ private:
 	}
 	inline bool isValidSchemeCharacter(charType in_test)
 	{
-		return isalnum(in_test) || (in_test == '+') || (in_test == '-') || (in_test == '.');
+		return genericIsAlNum(in_test) || (in_test == '+') || (in_test == '-') || (in_test == '.');
 	}
 	inline bool isUnreservedCharacter(charType in_test)
 	{
-		return isalnum(in_test) || (in_test == '-') || (in_test == '_') || (in_test == '.') || (in_test == '~');
+		return genericIsAlNum(in_test) || (in_test == '-') || (in_test == '_') || (in_test == '.') || (in_test == '~');
 	}
 	inline bool isPercentEncoded(charType in_test)
 	{
-		return isalnum(in_test) || (in_test == '%');
+		return genericIsAlNum(in_test) || (in_test == '%');
 	}
 	inline bool isSubDelimiter(charType in_test) const
 	{
 		return (in_test == '!') || (in_test == '$') || (in_test == '&') || (in_test == '\'') || (in_test == '(') || (in_test == ')')
 			|| (in_test == '*') || (in_test == '+') || (in_test == ',') || (in_test == ';') || (in_test == '=');
+	}
+	//note all of these guys are concrete implementations
+	inline bool genericIsAlpha(char in_char)
+	{
+		return (isalpha(in_char) != 0);
+	}
+	inline bool genericIsDigit(char in_char)
+	{
+		return (isdigit(in_char) != 0);
+	}
+	inline bool genericIsAlNum(char in_char)
+	{
+		return (isalnum(in_char) != 0);
+	}
+	inline bool genericIsAlpha(wchar_t in_char)
+	{
+		return (iswalpha(in_char) != 0);
+	}
+	inline bool genericIsDigit(wchar_t in_char)
+	{
+		return (iswdigit(in_char) != 0);
+	}
+	inline bool genericIsAlNum(wchar_t in_char)
+	{
+		return (iswalnum(in_char) != 0);
+	}
+	inline size_t genericGetStringLength(char *in_char)
+	{
+		return strlen(in_char);
+	}
+	inline size_t genericGetStringLength(wchar_t *in_char)
+	{
+		return wcslen(in_char);
 	}
 };
 
