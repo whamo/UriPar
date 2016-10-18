@@ -559,6 +559,186 @@ TEST_CASE("Exception testing", "[exception testing]") {
 		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
 	}
 }
+TEST_CASE("Examples from the standard", "[examples]") {
+
+	SECTION("Example 1") {
+		char *basicURI = "ftp://ftp.is.co.za/rfc/rfc1808.txt";
+		UriParser basicTest(basicURI);
+		char *temp = basicURI + 35;
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 3);
+		REQUIRE(basicTest.authority.startPosition == basicURI + 4);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 18);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == basicURI + 6);
+		REQUIRE(basicTest.host.endPosition == basicURI + 18);
+		REQUIRE(basicTest.port.startPosition == NULL);
+		REQUIRE(basicTest.port.endPosition == NULL);
+		REQUIRE(basicTest.path.startPosition == basicURI + 18);
+		REQUIRE(basicTest.path.endPosition == basicURI + 34);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+	SECTION("Example 2") {
+		char *basicURI = "http://www.ietf.org/rfc/rfc2396.txt";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
+		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 19);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == basicURI + 7);
+		REQUIRE(basicTest.host.endPosition == basicURI + 19);
+		REQUIRE(basicTest.port.startPosition == NULL);
+		REQUIRE(basicTest.port.endPosition == NULL);
+		REQUIRE(basicTest.path.startPosition == basicURI + 19);
+		REQUIRE(basicTest.path.endPosition == basicURI + 35);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+	SECTION("Example 3") {
+		char *basicURI = "ldap://[2001:db8::7]/c=GB?objectClass?one";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
+		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 14);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == basicURI + 7);
+		REQUIRE(basicTest.host.endPosition == basicURI + 14);
+		REQUIRE(basicTest.port.startPosition == NULL);
+		REQUIRE(basicTest.port.endPosition == NULL);
+		REQUIRE(basicTest.path.startPosition == basicURI + 14);
+		REQUIRE(basicTest.path.endPosition == basicURI + 19);
+		REQUIRE(basicTest.query.startPosition == basicURI + 20);
+		REQUIRE(basicTest.query.endPosition == basicURI + 35);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+	SECTION("Example 4") {
+		char *basicURI = "mailto:John.Doe@example.com";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 6);
+		REQUIRE(basicTest.authority.startPosition == NULL);
+		REQUIRE(basicTest.authority.endPosition == NULL);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == NULL);
+		REQUIRE(basicTest.host.endPosition == NULL);
+		REQUIRE(basicTest.port.startPosition == NULL);
+		REQUIRE(basicTest.port.endPosition == NULL);
+		REQUIRE(basicTest.path.startPosition == basicURI + 7);
+		REQUIRE(basicTest.path.endPosition == basicURI + 27);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+	SECTION("Example 5") {
+		char *basicURI = "news:comp.infosystems.www.servers.unix";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
+		REQUIRE(basicTest.authority.startPosition == NULL);
+		REQUIRE(basicTest.authority.endPosition == NULL);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == NULL);
+		REQUIRE(basicTest.host.endPosition == NULL);
+		REQUIRE(basicTest.port.startPosition == NULL);
+		REQUIRE(basicTest.port.endPosition == NULL);
+		REQUIRE(basicTest.path.startPosition == basicURI + 5);
+		REQUIRE(basicTest.path.endPosition == basicURI + 38);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+	SECTION("Example 6") {
+		char *basicURI = "tel:+1-816-555-1212";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 3);
+		REQUIRE(basicTest.authority.startPosition == NULL);
+		REQUIRE(basicTest.authority.endPosition == NULL);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == NULL);
+		REQUIRE(basicTest.host.endPosition == NULL);
+		REQUIRE(basicTest.port.startPosition == NULL);
+		REQUIRE(basicTest.port.endPosition == NULL);
+		REQUIRE(basicTest.path.startPosition == basicURI + 4);
+		REQUIRE(basicTest.path.endPosition == basicURI + 19);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+	SECTION("Example 7") {
+		char *basicURI = "telnet://192.0.2.16:80/";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 6);
+		REQUIRE(basicTest.authority.startPosition == basicURI + 7);
+		REQUIRE(basicTest.authority.endPosition == basicURI + 22);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == basicURI + 9);
+		REQUIRE(basicTest.host.endPosition == basicURI + 19);
+		REQUIRE(basicTest.port.startPosition == basicURI + 20);
+		REQUIRE(basicTest.port.endPosition == basicURI + 22);
+		REQUIRE(basicTest.path.startPosition == NULL);
+		REQUIRE(basicTest.path.endPosition == NULL);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+	SECTION("Example 8") {
+		char *basicURI = "urn:oasis:names:specification:docbook:dtd:xml:4.1.2";
+		UriParser basicTest(basicURI);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == basicURI + 3);
+		REQUIRE(basicTest.authority.startPosition == NULL);
+		REQUIRE(basicTest.authority.endPosition == NULL);
+		REQUIRE(basicTest.username.startPosition == NULL);
+		REQUIRE(basicTest.username.endPosition == NULL);
+		REQUIRE(basicTest.password.startPosition == NULL);
+		REQUIRE(basicTest.password.endPosition == NULL);
+		REQUIRE(basicTest.host.startPosition == NULL);
+		REQUIRE(basicTest.host.endPosition == NULL);
+		REQUIRE(basicTest.port.startPosition == NULL);
+		REQUIRE(basicTest.port.endPosition == NULL);
+		REQUIRE(basicTest.path.startPosition == basicURI + 4);
+		REQUIRE(basicTest.path.endPosition == basicURI + 51);
+		REQUIRE(basicTest.query.startPosition == NULL);
+		REQUIRE(basicTest.query.endPosition == NULL);
+		REQUIRE(basicTest.fragment.startPosition == NULL);
+		REQUIRE(basicTest.fragment.endPosition == NULL);
+	}
+}
 int main(int argc, char* const argv[])
 {
 	int result = Catch::Session().run(argc, argv);
