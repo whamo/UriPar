@@ -159,11 +159,6 @@
     </ClCompile>
     <ClCompile Include="UriParserTesting.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UriPar\UriPar.vcxproj">
-      <Project>{d8f984b0-b938-417e-9022-d18684cf5514}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

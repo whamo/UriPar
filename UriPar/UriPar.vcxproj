@@ -132,10 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="UriParser.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="UriParser.cpp" />
+    <ClInclude Include="UriParser.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

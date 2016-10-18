@@ -4,43 +4,43 @@
 #include "stdafx.h"
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
-#include "UriParser.h"
+#include "UriParser.hpp"
 
 TEST_CASE("Test scheme parsing", "[scheme]") {
-	
+
 	SECTION("Basic test for scheme") {
 		char *basicURI = "http://www.arsenal.com";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 	}
 	SECTION("Basic test for no scheme") {
 		char *basicURI = "//www.arsenal.com";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 	}
 	SECTION("Empty string input - shouldn't blow up") {
 		char *basicURI = "";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 	}
 	SECTION("just query and fragment - shouldn't blow up") {
 		char *basicURI = "?testing=true#somefragment";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 	}
 	SECTION("Teting scheme with special characters") {
 		char *basicURI = "h+2t.0t-9p://www.arsenal.com";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 10);
 	}
 	SECTION("Teting scheme with special characters") {
 		char *basicURI = "h!2;0t*9p://www.arsenal.com";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 	}
@@ -49,7 +49,7 @@ TEST_CASE("Test authority parsing", "[authority]") {
 
 	SECTION("Basic test for authority") {
 		char *basicURI = "http://www.arsenal.com";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
@@ -63,7 +63,7 @@ TEST_CASE("Test authority parsing", "[authority]") {
 	}
 	SECTION("Basic test for no authority") {
 		char *basicURI = "http:";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -77,7 +77,7 @@ TEST_CASE("Test authority parsing", "[authority]") {
 	}
 	SECTION("Basic test for no authority") {
 		char *basicURI = "http:/path/here";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -91,7 +91,7 @@ TEST_CASE("Test authority parsing", "[authority]") {
 	}
 	SECTION("Basic test for authority followed by query") {
 		char *basicURI = "http://www.arsenal.com?test=true";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
@@ -105,7 +105,7 @@ TEST_CASE("Test authority parsing", "[authority]") {
 	}
 	SECTION("Basic test for authority followed by fragment") {
 		char *basicURI = "http://www.arsenal.com#somefragment";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
@@ -119,7 +119,7 @@ TEST_CASE("Test authority parsing", "[authority]") {
 	}
 	SECTION("Basic test for authority with no scheme") {
 		char *basicURI = "//www.arsenal.com#somefragment";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == basicURI);
@@ -137,7 +137,7 @@ TEST_CASE("Test path parsing", "[path]") {
 
 	SECTION("Basic test for path") {
 		char *basicURI = "http://www.arsenal.com/fixtures/first-team";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
@@ -151,7 +151,7 @@ TEST_CASE("Test path parsing", "[path]") {
 	}
 	SECTION("Basic test for path starting with slash") {
 		char *basicURI = "/fixtures/first-team";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		char *temp = basicURI + 20;
 		bool will = (basicTest.path.endPosition == basicURI + 20);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
@@ -167,7 +167,7 @@ TEST_CASE("Test path parsing", "[path]") {
 	}
 	SECTION("Basic test for path no initial slash") {
 		char *basicURI = "fixtures/first-team";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -181,7 +181,7 @@ TEST_CASE("Test path parsing", "[path]") {
 	}
 	SECTION("Basic test for path followed by query") {
 		char *basicURI = "http://www.arsenal.com/fixtures/first-team?query=true";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
@@ -195,7 +195,7 @@ TEST_CASE("Test path parsing", "[path]") {
 	}
 	SECTION("Basic test for path starting with slash followed by query") {
 		char *basicURI = "/fixtures/first-team?query=true";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -209,7 +209,7 @@ TEST_CASE("Test path parsing", "[path]") {
 	}
 	SECTION("Basic test for path no initial slash followed by query") {
 		char *basicURI = "fixtures/first-team?query=true";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -223,7 +223,7 @@ TEST_CASE("Test path parsing", "[path]") {
 	}
 	SECTION("Basic test for path followed by fragment") {
 		char *basicURI = "http://www.arsenal.com/fixtures/first-team#somefragment";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
@@ -237,7 +237,7 @@ TEST_CASE("Test path parsing", "[path]") {
 	}
 	SECTION("Basic test for path starting with slash followed by query") {
 		char *basicURI = "/fixtures/first-team#somefragment";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -251,7 +251,7 @@ TEST_CASE("Test path parsing", "[path]") {
 	}
 	SECTION("Basic test for path no initial slash followed by query") {
 		char *basicURI = "fixtures/first-team#somefragment";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -268,7 +268,7 @@ TEST_CASE("Test query and fragment parsing", "[query and fragment]") {
 
 	SECTION("Basic test for path followed by fragment") {
 		char *basicURI = "http://www.arsenal.com/fixtures/first-team?query=false#somefragment";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
@@ -282,7 +282,7 @@ TEST_CASE("Test query and fragment parsing", "[query and fragment]") {
 	}
 	SECTION("Basic test for path starting with slash followed by query and fragment") {
 		char *basicURI = "/fixtures/first-team?query=false#somefragment";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -296,7 +296,7 @@ TEST_CASE("Test query and fragment parsing", "[query and fragment]") {
 	}
 	SECTION("Basic test for path no initial slash followed by query and fragment") {
 		char *basicURI = "fixtures/first-team?query=false#somefragment";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -313,7 +313,7 @@ TEST_CASE("Test simple authority parsing", "[authority parsing]") {
 
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "//username:password@www.arsenal.com:80";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == basicURI);
@@ -335,7 +335,7 @@ TEST_CASE("Test simple authority parsing", "[authority parsing]") {
 	}
 	SECTION("Basic test for authority parsing, no password") {
 		char *basicURI = "//username@www.arsenal.com:80";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		char *temp = basicURI + 29;
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
@@ -358,7 +358,7 @@ TEST_CASE("Test simple authority parsing", "[authority parsing]") {
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "//www.arsenal.com:80";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == basicURI);
@@ -380,7 +380,7 @@ TEST_CASE("Test simple authority parsing", "[authority parsing]") {
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "//www.arsenal.com";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == NULL);
 		REQUIRE(basicTest.scheme.endPosition == NULL);
 		REQUIRE(basicTest.authority.startPosition == basicURI);
@@ -405,7 +405,7 @@ TEST_CASE("Test simple parsing with get functions", "[simple parsing]") {
 
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=false#somefragment";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		string actualScheme("http");
 		string actualUsername("username");
 		string actualPassword("password");
@@ -424,7 +424,7 @@ TEST_CASE("Test simple parsing with get functions", "[simple parsing]") {
 		string parseQuery = basicTest.getQuery();
 		string parseFragment = basicTest.getFragment();
 		string parseAuthority = basicTest.getAuthority();
-		
+
 		REQUIRE(actualScheme.compare(parseScheme) == 0);
 		REQUIRE(actualUsername.compare(parseUsername) == 0);
 		REQUIRE(actualPassword.compare(parsePassword) == 0);
@@ -459,7 +459,7 @@ TEST_CASE("Test string constructor", "[string constructor]") {
 	SECTION("Basic test for authority parsing") {
 		string basicURI = "hTtP://username:password@www.ARSEnal.com:80/path1/path2?query=false#somefragment";
 		char *thisPntr = &basicURI[0];
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		string actualScheme("http");
 		string actualUsername("username");
 		string actualPassword("password");
@@ -511,63 +511,77 @@ TEST_CASE("Test string constructor", "[string constructor]") {
 TEST_CASE("Exception testing", "[exception testing]") {
 
 	SECTION("Basic test for authority parsing") {
+		//Catch won't let me use templated constructor with require throws macros
 		char *basicURI = NULL;
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_THROWS_AS(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://usern[]ame:password@www.arsenal.com:80/path1/path2?query=false#somefragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_THROWS_AS(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:pass:word@www.arsenal.com:80/path1/path2?query=false#somefragment";
-		REQUIRE_NOTHROW(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_NOTHROW(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:pas[]sword@www.arsenal.com:80/path1/path2?query=false#somefragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_THROWS_AS(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:password@www.ars[]enal.com:80/path1/path2?query=false#somefragment";
-		REQUIRE_NOTHROW(UriParser basicTest(basicURI));
+		UriParser<char, string> basicTest("");
+		REQUIRE_NOTHROW(basicTest.resetUriParser(basicURI));
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:password@www.ars@enal.com:80/path1/path2?query=false#somefragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_THROWS_AS(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:password@www.ars:enal.com:80/path1/path2?query=false#somefragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_THROWS_AS(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:password@www.arsenal.com:8a0/path1/path2?query=false#somefragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_THROWS_AS(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:password@www.arsenal.com:80/path[]1/path2?query=false#somefragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_THROWS_AS(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=f#alse#somefragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_THROWS_AS(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=f[]alse#somefragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_THROWS_AS(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=false#som[]efragment";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_THROWS_AS(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 	SECTION("Basic test for authority parsing") {
 		char *basicURI = "ldap://[2001:db8::7/c=GB?objectClass?one";
-		REQUIRE_THROWS_AS(UriParser basicTest(basicURI), invalid_argument);
+		UriParser<char, string> basicTest("");
+		REQUIRE_THROWS_AS(basicTest.resetUriParser(basicURI), invalid_argument);
 	}
 }
 TEST_CASE("Examples from the standard", "[examples]") {
 
 	SECTION("Example 1") {
 		char *basicURI = "ftp://ftp.is.co.za/rfc/rfc1808.txt";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		char *temp = basicURI + 35;
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 3);
@@ -590,7 +604,7 @@ TEST_CASE("Examples from the standard", "[examples]") {
 	}
 	SECTION("Example 2") {
 		char *basicURI = "http://www.ietf.org/rfc/rfc2396.txt";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
@@ -612,7 +626,7 @@ TEST_CASE("Examples from the standard", "[examples]") {
 	}
 	SECTION("Example 3") {
 		char *basicURI = "ldap://[2001:db8::7]/c=GB?objectClass?one";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
@@ -634,7 +648,7 @@ TEST_CASE("Examples from the standard", "[examples]") {
 	}
 	SECTION("Example 3a - made up") {
 		char *basicURI = "ldap://[2001:db8::7]:1800/c=GB?objectClass?one";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 5);
@@ -656,7 +670,7 @@ TEST_CASE("Examples from the standard", "[examples]") {
 	}
 	SECTION("Example 4") {
 		char *basicURI = "mailto:John.Doe@example.com";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 6);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -678,7 +692,7 @@ TEST_CASE("Examples from the standard", "[examples]") {
 	}
 	SECTION("Example 5") {
 		char *basicURI = "news:comp.infosystems.www.servers.unix";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 4);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -700,7 +714,7 @@ TEST_CASE("Examples from the standard", "[examples]") {
 	}
 	SECTION("Example 6") {
 		char *basicURI = "tel:+1-816-555-1212";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 3);
 		REQUIRE(basicTest.authority.startPosition == NULL);
@@ -722,7 +736,7 @@ TEST_CASE("Examples from the standard", "[examples]") {
 	}
 	SECTION("Example 7") {
 		char *basicURI = "telnet://192.0.2.16:80/";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 6);
 		REQUIRE(basicTest.authority.startPosition == basicURI + 7);
@@ -744,7 +758,7 @@ TEST_CASE("Examples from the standard", "[examples]") {
 	}
 	SECTION("Example 8") {
 		char *basicURI = "urn:oasis:names:specification:docbook:dtd:xml:4.1.2";
-		UriParser basicTest(basicURI);
+		UriParser<char, string> basicTest(basicURI);
 		REQUIRE(basicTest.scheme.startPosition == basicURI);
 		REQUIRE(basicTest.scheme.endPosition == basicURI + 3);
 		REQUIRE(basicTest.authority.startPosition == NULL);
