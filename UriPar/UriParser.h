@@ -15,7 +15,7 @@ class UriParser
 {
 public:
 	//constructor - string or pointer
-	UriParser(string in_uri);
+	UriParser(string &in_uri);
 	UriParser(char *in_uri);
 	//get functions
 	//get functions will pull out strings of the different segments

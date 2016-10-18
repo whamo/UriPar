@@ -8,6 +8,15 @@ UriParser::UriParser(char *in_uri)
 	uriInput = in_uri;
 	parseInputUri(in_uri);
 }
+
+UriParser::UriParser(string &in_uri)
+{
+	resetUriSegments();
+	//parse the string
+	uriInput = &in_uri[0];
+	parseInputUri(&in_uri[0]);
+}
+
 void UriParser::parseInputUri(char *in_uri)
 {
 	if (in_uri == NULL)
