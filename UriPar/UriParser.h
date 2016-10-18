@@ -28,6 +28,8 @@ public:
 	string getPath() const;
 	string getQuery() const;
 	string getFragment() const;
+	//a copy of the beginning pointer
+	char *uriInput;
 	//and the public segment definitions
 	UriSegment scheme;
 	UriSegment authority;
@@ -51,10 +53,10 @@ private:
 	void parseQuery(char *in_current, char *in_last);
 	void parseFragment(char *in_current, char *in_last);
 	void resetUriSegments();
-	bool isValidSchemeCharacter(char in_test);
-	bool isUnreservedCharacter(char in_test);
-	bool isPercentEncoded(char in_test);
-	bool isSubDelimiter(char in_test);
+	inline bool isValidSchemeCharacter(char in_test) const;
+	inline bool isUnreservedCharacter(char in_test) const;
+	inline bool isPercentEncoded(char in_test) const;
+	inline bool isSubDelimiter(char in_test) const;
 	int uriLength;
 	string inputUri;
 };

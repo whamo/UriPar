@@ -454,6 +454,60 @@ TEST_CASE("Test simple parsing with get functions", "[simple parsing]") {
 		REQUIRE(basicTest.fragment.endPosition == basicURI + 80);
 	}
 }
+TEST_CASE("Test string constructor", "[string constructor]") {
+
+	SECTION("Basic test for authority parsing") {
+		string basicURI = "http://username:password@www.arsenal.com:80/path1/path2?query=false#somefragment";
+		char *thisPntr = &basicURI[0];
+		UriParser basicTest(basicURI);
+		string actualScheme("http");
+		string actualUsername("username");
+		string actualPassword("password");
+		string actualHost("www.arsenal.com");
+		string actualPort("80");
+		string actualPath("/path1/path2");
+		string actualQuery("query=false");
+		string actualFragment("somefragment");
+		string actualAuthority("//username:password@www.arsenal.com:80");
+		string parseScheme = basicTest.getScheme();
+		string parseUsername = basicTest.getUsername();
+		string parsePassword = basicTest.getPassword();
+		string parseHost = basicTest.getHost();
+		string parsePort = basicTest.getPort();
+		string parsePath = basicTest.getPath();
+		string parseQuery = basicTest.getQuery();
+		string parseFragment = basicTest.getFragment();
+		string parseAuthority = basicTest.getAuthority();
+
+		REQUIRE(actualScheme.compare(parseScheme) == 0);
+		REQUIRE(actualUsername.compare(parseUsername) == 0);
+		REQUIRE(actualPassword.compare(parsePassword) == 0);
+		REQUIRE(actualHost.compare(parseHost) == 0);
+		REQUIRE(actualPort.compare(parsePort) == 0);
+		REQUIRE(actualPath.compare(parsePath) == 0);
+		REQUIRE(actualQuery.compare(parseQuery) == 0);
+		REQUIRE(actualFragment.compare(parseFragment) == 0);
+		REQUIRE(actualAuthority.compare(parseAuthority) == 0);
+		REQUIRE(basicTest.scheme.startPosition == basicURI);
+		REQUIRE(basicTest.scheme.endPosition == thisPntr + 4);
+		REQUIRE(basicTest.authority.startPosition == thisPntr + 5);
+		REQUIRE(basicTest.authority.endPosition == thisPntr + 43);
+		REQUIRE(basicTest.username.startPosition == thisPntr + 7);
+		REQUIRE(basicTest.username.endPosition == thisPntr + 15);
+		REQUIRE(basicTest.password.startPosition == thisPntr + 16);
+		REQUIRE(basicTest.password.endPosition == thisPntr + 24);
+		REQUIRE(basicTest.host.startPosition == thisPntr + 25);
+		REQUIRE(basicTest.host.endPosition == thisPntr + 40);
+		REQUIRE(basicTest.port.startPosition == thisPntr + 41);
+		REQUIRE(basicTest.port.endPosition == thisPntr + 43);
+		REQUIRE(basicTest.path.startPosition == thisPntr + 43);
+		REQUIRE(basicTest.path.endPosition == thisPntr + 55);
+		REQUIRE(basicTest.query.startPosition == thisPntr + 56);
+		REQUIRE(basicTest.query.endPosition == thisPntr + 67);
+		REQUIRE(basicTest.fragment.startPosition == thisPntr + 68);
+		REQUIRE(basicTest.fragment.endPosition == thisPntr + 80);
+	}
+}
 TEST_CASE("Exception testing", "[exception testing]") {
 
 	SECTION("Basic test for authority parsing") {

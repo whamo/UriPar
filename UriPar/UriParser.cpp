@@ -5,6 +5,7 @@ UriParser::UriParser(char *in_uri)
 {
 	resetUriSegments();
 	//parse the string
+	uriInput = in_uri;
 	parseInputUri(in_uri);
 }
 void UriParser::parseInputUri(char *in_uri)
@@ -51,7 +52,7 @@ void UriParser::parseScheme(char *in_current, char *in_last)
 	else
 	{
 		scheme.startPosition = NULL;
-		throw invalid_argument("Malformed string at scheme location " + to_string(current - in_current));
+		throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in scheme");
 	}
 }
 
@@ -95,7 +96,7 @@ void UriParser::parseUsernamePassword(char *in_current, char *in_end)
 		{
 			if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == ':')))
 			{
-				throw invalid_argument("Malformed string at username location " + to_string(current - username.startPosition) + " chars from start of username");
+				throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in username");
 			}
 			if (*current == ':')
 			{
@@ -130,9 +131,9 @@ void UriParser::parseHost(char *in_current, char *in_end)
 	{
 		if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == '[') || (*current == ']') || (*current == ':')))
 		{
-			throw invalid_argument("Malformed string at host location " + to_string(current - host.startPosition) + " chars from start of host name");
+			throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in host");
 		}
-		if ((port.startPosition != NULL) && !(isdigit(*current))) throw invalid_argument("Malformed string at port location " + to_string(current - port.startPosition) + " chars from start of port");
+		if ((port.startPosition != NULL) && !(isdigit(*current))) throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in port");
 		if (*current == ':')
 		{
 			host.endPosition = current;
@@ -157,7 +158,7 @@ void UriParser::parsePath(char *in_current, char *in_last)
 			//ignoring the extra conditions on : and @ for now
 			if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == ':') || (*current == '@') || (*current == '/')))
 			{
-				throw invalid_argument("Malformed string at path location " + to_string(current - path.startPosition) + " chars from start of path");
+				throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in path");
 			}
 			current++;
 		}
@@ -175,7 +176,7 @@ void UriParser::parseQuery(char *in_current, char *in_last)
 	{
 		if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == ':') || (*current == '@') || (*current == '/') || (*current == '?')))
 		{
-			throw invalid_argument("Malformed string at query location " + to_string(current - query.startPosition) + " chars from start of query");
+			throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in query");
 		}
 		current++;
 	}
@@ -191,28 +192,28 @@ void UriParser::parseFragment(char *in_current, char *in_last)
 	{
 		if (!(isUnreservedCharacter(*current) || isPercentEncoded(*current) || isSubDelimiter(*current) || (*current == ':') || (*current == '@') || (*current == '/') || (*current == '?')))
 		{
-			throw invalid_argument("Malformed string at fragment location " + to_string(current - fragment.startPosition) + " chars from start of fragment");
+			throw invalid_argument("Malformed string at location " + to_string(current - uriInput) + " in fragment");
 		}
 		current++;
 	}
 	fragment.endPosition = current;
 }
-bool UriParser::isValidSchemeCharacter(char in_test)
+inline bool UriParser::isValidSchemeCharacter(char in_test) const
 {
 	return isalnum(in_test) || (in_test == '+') || (in_test == '-') || (in_test == '.');
 }
 
-bool UriParser::isUnreservedCharacter(char in_test)
+inline bool UriParser::isUnreservedCharacter(char in_test) const
 {
 	return isalnum(in_test) || (in_test == '-') || (in_test == '_') || (in_test == '.') || (in_test == '~');
 }
 
-bool UriParser::isPercentEncoded(char in_test)
+inline bool UriParser::isPercentEncoded(char in_test) const
 {
 	return isalnum(in_test) || (in_test == '%');
 }
 
-bool UriParser::isSubDelimiter(char in_test)
+inline bool UriParser::isSubDelimiter(char in_test) const
 {
 	return (in_test == '!') || (in_test == '$') || (in_test == '&') || (in_test == '\'') || (in_test == '(') || (in_test == ')')
 		|| (in_test == '*') || (in_test == '+') || (in_test == ',') || (in_test == ';') || (in_test == '=');
