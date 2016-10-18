@@ -468,7 +468,7 @@ TEST_CASE("Test string constructor", "[string constructor]") {
 		string actualPath("/path1/path2");
 		string actualQuery("query=false");
 		string actualFragment("somefragment");
-		string actualAuthority("//username:password@www.arsenal.com:80");
+		string actualAuthority("//username:password@www.ARSEnal.com:80");
 		string parseScheme = basicTest.getScheme();
 		string parseUsername = basicTest.getUsername();
 		string parsePassword = basicTest.getPassword();

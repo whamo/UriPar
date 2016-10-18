@@ -1,4 +1,6 @@
 #include "UriParser.h"
+#include <algorithm>
+#include <cctype> 
 using namespace std;
 
 UriParser::UriParser(char *in_uri)
@@ -44,7 +46,7 @@ void UriParser::parseScheme(char *in_current, char *in_last)
 {
 	char *current = in_current;
 	scheme.startPosition = in_current;
-	while ((current <= in_last)&&(*current != ':')&&isValidSchemeCharacter(*current)) current++;
+	while ((current <= in_last) && (*current != ':') && isValidSchemeCharacter(*current)) current++;
 	//either hit the end, found an invalid character or found the end of the scheme
 	if (*current == ':')
 	{
@@ -73,15 +75,15 @@ void UriParser::parseAuthority(char *in_current, char *in_last)
 	{
 		authority.startPosition = in_current;
 		current++;
-		while ((current <= in_last) && (*current != '/') && (*current != '?') 
+		while ((current <= in_last) && (*current != '/') && (*current != '?')
 			&& (*current != '#')) current++;
 		//authority is quite robust, accept all the inner text here
 		authority.endPosition = current;
 		if (*current == '/') parsePath(current, in_last); /*parse the path here*/
 		else if (*current == '?') parseQuery(current, in_last); /*parse the query here*/
 		else if (*current == '#') parseFragment(current, in_last); /*parse the fragment here*/
-		//sub parse the authority section here
-		subParseAuthority(authority.startPosition, authority.endPosition-1);
+																   //sub parse the authority section here
+		subParseAuthority(authority.startPosition, authority.endPosition - 1);
 	}
 	else parsePath(in_current, in_last); /*parsePath(in_current here*/
 }
@@ -232,7 +234,9 @@ std::string UriParser::getScheme() const
 {
 	if ((scheme.startPosition != NULL) && (scheme.endPosition != NULL))
 	{
-		return std::string(scheme.startPosition, scheme.endPosition - scheme.startPosition);
+		string returnString(scheme.startPosition, scheme.endPosition - scheme.startPosition);
+		std::transform(returnString.begin(), returnString.end(), returnString.begin(), ::tolower);
+		return returnString;
 	}
 	else return std::string();
 }
@@ -268,7 +272,9 @@ std::string UriParser::getHost() const
 {
 	if ((host.startPosition != NULL) && (host.endPosition != NULL))
 	{
-		return std::string(host.startPosition, host.endPosition - host.startPosition);
+		string returnString(host.startPosition, host.endPosition - host.startPosition);
+		std::transform(returnString.begin(), returnString.end(), returnString.begin(), ::tolower);
+		return returnString;
 	}
 	else return std::string();
 }
